@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    // Try multiple MongoDB URIs with timeout settings
+    // Try multiple MongoDB URIs with better connection settings
     const mongoUris = [
       process.env.MONGO_URI,
       'mongodb+srv://admin:admin123@cluster0.abcdef.mongodb.net/ecommerce?retryWrites=true&w=majority',
@@ -15,10 +15,10 @@ const connectDB = async () => {
         try {
           // Add connection options for better reliability
           const options = {
-            serverSelectionTimeoutMS: 5000, // 5 second timeout
+            serverSelectionTimeoutMS: 10000, // 10 second timeout
             socketTimeoutMS: 45000, // 45 second timeout
             bufferMaxEntries: 0, // Disable mongoose buffering
-            bufferCommands: false, // Disable mongoose buffering
+            // Keep bufferCommands as true (default) to prevent connection issues
           };
           
           conn = await mongoose.connect(uri, options);
