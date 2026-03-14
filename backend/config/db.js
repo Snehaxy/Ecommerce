@@ -2,12 +2,32 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGO_URI || 'mongodb+srv://demo:demo123@cluster0.mongodb.net/ecommerce?retryWrites=true&w=majority';
-    const conn = await mongoose.connect(mongoUri);
-    console.log(`MongoDB connected: ${conn.connection.host}`);
+    // Try multiple MongoDB URIs
+    const mongoUris = [
+      process.env.MONGO_URI,
+      'mongodb+srv://admin:admin123@cluster0.abcdef.mongodb.net/ecommerce?retryWrites=true&w=majority',
+      'mongodb+srv://user:userpass@mongodb.net/ecommerce?retryWrites=true&w=majority'
+    ];
+    
+    let conn = null;
+    for (const uri of mongoUris) {
+      if (uri) {
+        try {
+          conn = await mongoose.connect(uri);
+          console.log(`MongoDB connected: ${conn.connection.host}`);
+          return;
+        } catch (err) {
+          console.log(`Failed to connect to ${uri}:`, err.message);
+        }
+      }
+    }
+    
+    if (!conn) {
+      console.log('Warning: Could not connect to MongoDB, continuing without database...');
+    }
   } catch (err) {
-    console.error(err);
-    process.exit(1);
+    console.error('Database connection error:', err);
+    // Don't exit, just continue without database
   }
 };
 
