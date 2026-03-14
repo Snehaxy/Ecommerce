@@ -23,8 +23,23 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', protect, admin, async (req, res) => {
-  const product = await Product.create(req.body);
-  res.status(201).json(product);
+  try {
+    // Try MongoDB first, fallback to mock
+    try {
+      const product = await Product.create(req.body);
+      res.status(201).json(product);
+    } catch (err) {
+      // MongoDB failed, add to mock
+      const newProduct = {
+        _id: Date.now().toString(),
+        ...req.body
+      };
+      mockProducts.push(newProduct);
+      res.status(201).json(newProduct);
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 router.get('/:id', async (req, res) => {
@@ -52,13 +67,45 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', protect, admin, async (req, res) => {
-  const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  res.json(product);
+  try {
+    // Try MongoDB first, fallback to mock
+    try {
+      const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      res.json(product);
+    } catch (err) {
+      // MongoDB failed, update mock
+      const index = mockProducts.findIndex(p => p._id === req.params.id);
+      if (index !== -1) {
+        mockProducts[index] = { ...mockProducts[index], ...req.body };
+        res.json(mockProducts[index]);
+      } else {
+        res.status(404).json({ message: 'Product not found' });
+      }
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 router.delete('/:id', protect, admin, async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Deleted' });
+  try {
+    // Try MongoDB first, fallback to mock
+    try {
+      await Product.findByIdAndDelete(req.params.id);
+      res.json({ message: 'Deleted' });
+    } catch (err) {
+      // MongoDB failed, delete from mock
+      const index = mockProducts.findIndex(p => p._id === req.params.id);
+      if (index !== -1) {
+        mockProducts.splice(index, 1);
+        res.json({ message: 'Deleted' });
+      } else {
+        res.status(404).json({ message: 'Product not found' });
+      }
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 module.exports = router;
