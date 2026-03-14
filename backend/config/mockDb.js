@@ -4,14 +4,14 @@ const mockUsers = [
     _id: '64f1a2b3c4d5e6f7g8h9i0j1',
     name: 'Test User',
     email: 'user@test.com',
-    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // 'password123' hashed
+    password: '$2a$10$2JUx7Vl3tycht8q6nN04FOepIj01ukwO9XbLTVi/xn7MgTjVmTXQm', // 'password123' hashed
     isAdmin: false
   },
   {
     _id: '64f1a2b3c4d5e6f7g8h9i0j2',
     name: 'Admin',
     email: 'admin@test.com',
-    password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // 'password123' hashed
+    password: '$2a$10$2JUx7Vl3tycht8q6nN04FOepIj01ukwO9XbLTVi/xn7MgTjVmTXQm', // 'password123' hashed
     isAdmin: true
   }
 ];
