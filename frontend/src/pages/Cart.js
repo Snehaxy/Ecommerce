@@ -35,7 +35,7 @@ export default function Cart() {
               <td>
                 <Link to={`/product/${p._id}`}>{p.name}</Link>
               </td>
-              <td>${p.price.toFixed(2)}</td>
+              <td>${typeof p.price === 'number' ? p.price.toFixed(2) : parseFloat(p.price).toFixed(2)}</td>
               <td>
                 <input
                   type="number"
@@ -45,7 +45,7 @@ export default function Cart() {
                   className="qty-input"
                 />
               </td>
-              <td>${(p.price * p.quantity).toFixed(2)}</td>
+              <td>${((typeof p.price === 'number' ? p.price : parseFloat(p.price)) * p.quantity).toFixed(2)}</td>
               <td>
                 <button className="btn btn-small" onClick={() => removeFromCart(p._id)}>Remove</button>
               </td>
@@ -54,7 +54,7 @@ export default function Cart() {
         </tbody>
       </table>
       <div className="cart-summary">
-        <h3>Total: ${total.toFixed(2)}</h3>
+        <h3>Total: ${typeof total === 'number' ? total.toFixed(2) : parseFloat(total).toFixed(2)}</h3>
         <button className="btn btn-large" onClick={() => navigate('/checkout')}>Proceed to Checkout</button>
         <Link to="/" className="btn btn-secondary">Continue Shopping</Link>
       </div>

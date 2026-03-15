@@ -30,7 +30,7 @@ export default function Product() {
           <h1>{product.name}</h1>
           <p className="category">Category: {product.category || 'Uncategorized'}</p>
           <p className="description">{product.description || 'No description'}</p>
-          <p className="price">${product.price.toFixed(2)}</p>
+          <p className="price">${typeof product.price === 'number' ? product.price.toFixed(2) : parseFloat(product.price).toFixed(2)}</p>
           <p className="stock">In Stock: {product.countInStock || 0}</p>
           <button
             className="btn btn-large"

@@ -36,7 +36,7 @@ export default function Home() {
             </div>
             <h3>{p.name}</h3>
             <p className="product-desc">{p.description}</p>
-            <p className="product-price">${p.price.toFixed(2)}</p>
+            <p className="product-price">${typeof p.price === 'number' ? p.price.toFixed(2) : parseFloat(p.price).toFixed(2)}</p>
             <div className="product-actions">
               <Link to={`/product/${p._id}`} className="btn btn-secondary">View</Link>
               <button className="btn" onClick={() => addToCart(p)}>Add to Cart</button>

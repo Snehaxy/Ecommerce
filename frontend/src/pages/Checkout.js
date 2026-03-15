@@ -50,11 +50,11 @@ export default function Checkout() {
         <ul>
           {cart.map(p => (
             <li key={p._id}>
-              {p.name} x{p.quantity} = ${(p.price * p.quantity).toFixed(2)}
+              {p.name} x{p.quantity} = ${((typeof p.price === 'number' ? p.price : parseFloat(p.price)) * p.quantity).toFixed(2)}
             </li>
           ))}
         </ul>
-        <h4>Total: ${total.toFixed(2)}</h4>
+        <h4>Total: ${typeof total === 'number' ? total.toFixed(2) : parseFloat(total).toFixed(2)}</h4>
       </div>
 
       <div className="checkout-form">
