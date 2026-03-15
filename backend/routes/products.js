@@ -7,15 +7,24 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
+    const q = req.query.q;
+    
     // Try MongoDB first, fallback to mock
     try {
-      const q = req.query.q;
       const filter = q ? { name: { $regex: q, $options: 'i' } } : {};
       const products = await Product.find(filter).limit(50);
       res.json(products);
     } catch (err) {
-      // MongoDB not available, use mock
-      res.json(mockProducts);
+      // MongoDB not available, use mock with search
+      let filteredProducts = mockProducts;
+      if (q) {
+        filteredProducts = mockProducts.filter(p => 
+          p.name.toLowerCase().includes(q.toLowerCase()) ||
+          p.description.toLowerCase().includes(q.toLowerCase()) ||
+          p.category.toLowerCase().includes(q.toLowerCase())
+        );
+      }
+      res.json(filteredProducts);
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
